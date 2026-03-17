@@ -1,33 +1,39 @@
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
 
+// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
-  
+  const env = loadEnv(mode, process.cwd(), '');
+
   return {
-    // 1. Zid hadi bach GitHub Pages i-lqa l-JS o CSS dyalk
-    base: './', // هذا يجعل المسارات نسبية وتعمل في أي مكان
-    
-    plugins: [react(), tailwindcss()],
-    
-    // Removed process.env define - use server proxy instead
-    
+    // 1. استخدام المسارات النسبية لضمان عمل الملفات في أي بيئة (GitHub/Vercel)
+    base: './', 
+
+    plugins: [
+      react(),
+      tailwindcss(),
+    ],
+
     resolve: {
       alias: {
-        // 2. Sl7t l-alias bach i-pointing nichen l-folder src
+        // 2. تسهيل استيراد الملفات من مجلد src باستخدام الرمز @
         '@': path.resolve(__dirname, './src'),
       },
     },
-    
+
     server: {
-      hmr: process.env.DISABLE_HMR !== 'true',
+      // تعطيل الـ HMR فقط إذا دعت الضرورة، الوضع الطبيعي هو true
+      hmr: true,
+      port: 5173,
     },
-    
-    // 3. Zid hadi bach t-thna mn ay mouchkil f l-build
+
     build: {
       outDir: 'dist',
-    }
+      // تحسين أداء الملفات النهائية
+      sourcemap: false,
+      chunkSizeWarningLimit: 1600,
+    },
   };
 });

@@ -671,7 +671,13 @@ export default function App() {
     }
 
     setLastZone('FUTURE_BUILD');
-    
+
+    // Require payment first
+    if (!isPaid) {
+      setShowPaymentModal(true);
+      return;
+    }
+
     // Step 1: Generate images
     try {
       setIsGeneratingImages(true);
@@ -696,7 +702,7 @@ export default function App() {
     }
 
     // Step 2: Run simulation and generate report
-    await runSimulation('FUTURE_BUILD', true);
+    await runSimulation('FUTURE_BUILD');
   };
 
   const handleGenerateB = async () => {
@@ -716,6 +722,12 @@ export default function App() {
 
     setLastZone('CURRENT_ASSET');
     setGeneratedImages([]); // Ensure no images are generated for Zone B
+
+    // Require payment first
+    if (!isPaid) {
+      setShowPaymentModal(true);
+      return;
+    }
 
     // Run simulation only (no image generation for Zone B)
     await runSimulation('CURRENT_ASSET', true);
@@ -1406,7 +1418,7 @@ export default function App() {
       <footer className="w-full py-20 text-center space-y-4 opacity-50 hover:opacity-100 transition-opacity backdrop-blur-xl" style={{ backgroundColor: 'rgba(5, 5, 5, 0.5)', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
         <div className="flex items-center justify-center gap-6 text-xs tracking-widest uppercase">
           <a href="mailto:support@aurametric.com" className="flex items-center gap-2 hover:text-gold transition-colors">
-            <Mail size={14} /> support@aurametric.com
+            <Mail size={14} /> metrecaura@gmail.com
           </a>
         </div>
         <p className="text-[0.6rem] text-gray-500 uppercase tracking-[0.3em]">
