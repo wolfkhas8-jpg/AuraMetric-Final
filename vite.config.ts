@@ -3,12 +3,11 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
-    // 1. استخدام المسارات النسبية لضمان عمل الملفات في أي بيئة (GitHub/Vercel)
+    // حل مشكلة "الصفحة البيضاء" في GitHub و Vercel
     base: './', 
 
     plugins: [
@@ -18,22 +17,22 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
-        // 2. تسهيل استيراد الملفات من مجلد src باستخدام الرمز @
+        // تعريف الرمز @ ليشير لمجلد src لسهولة الـ Import
         '@': path.resolve(__dirname, './src'),
       },
     },
 
-    server: {
-      // تعطيل الـ HMR فقط إذا دعت الضرورة، الوضع الطبيعي هو true
-      hmr: true,
-      port: 5173,
-    },
-
     build: {
       outDir: 'dist',
-      // تحسين أداء الملفات النهائية
+      assetsDir: 'assets',
       sourcemap: false,
-      chunkSizeWarningLimit: 1600,
+      // تحسين معالجة الملفات الكبيرة
+      chunkSizeWarningLimit: 2000,
     },
+
+    server: {
+      port: 5173,
+      strictPort: true,
+    }
   };
 });
